@@ -1,27 +1,27 @@
 # Aether Device Model
 
-**Version:** 0.1\
+**Version:** 0.2\
 **Status:** Approved
 
 ## Purpose
 
 The Aether Device Model defines how devices participate in an Aether
-Constellation.
+System and how Systems relate to the wider Aether Constellation.
 
-Aether treats device identity, device role, capabilities, trust,
-permissions, and Host status as separate concepts.
+Aether treats device identity, System membership, device role,
+capabilities, trust, permissions, and Host status as separate concepts.
 
 This separation allows Aether to support different operating systems,
-device types, personal AI implementations, and network configurations
-without tying the platform to a particular machine or topology.
+device types, personal AI implementations, users, and network
+configurations without tying the platform to a particular machine or
+topology.
 
 ------------------------------------------------------------------------
 
 ## 1. Aether Devices
 
 An Aether Device is a physical or virtual computing device running an
-Aether implementation and capable of participating in an Aether
-Constellation.
+Aether implementation and capable of participating in an Aether System.
 
 Examples may include:
 
@@ -37,7 +37,8 @@ Examples may include:
 Every Aether Device has its own identity.
 
 A device does not become a different device merely because its role,
-capabilities, network address, display name, or Host status changes.
+capabilities, network address, display name, Host status, or
+connectivity changes.
 
 Conceptually, a device may expose information such as:
 
@@ -53,7 +54,7 @@ Device
 ```
 
 The exact schema and protocol representation are implementation details
-and are not defined by Device Model v0.1.
+and are not defined by Device Model v0.2.
 
 ------------------------------------------------------------------------
 
@@ -86,35 +87,123 @@ The exact cryptographic implementation will be defined separately.
 
 ------------------------------------------------------------------------
 
-## 3. Constellations
+## 3. Systems
 
-A Constellation is a trusted collection of Aether Devices associated
-with a personal Aether environment.
+A System is one user's independent Aether environment.
 
-A device may participate in a Constellation after completing the
-appropriate pairing and trust process.
+A System may contain one device or many devices.
 
-The Constellation provides a logical environment in which devices can
-discover, authenticate, communicate with, and coordinate with other
-trusted devices.
+A System may also contain or support the user's personal AI, Host
+configuration, device relationships, permissions, and System-level
+state.
 
-Membership in a Constellation does not automatically grant unrestricted
-access to other devices.
+For example:
+
+``` text
+Alex's System
+├── Selene
+├── NOVA
+├── ENVY
+├── ORION
+├── iPhone
+└── Apple Watch
+```
+
+A System is not identical to any individual device.
+
+No Host, Node, Endpoint, or Companion is itself the System.
+
+A System must therefore remain conceptually valid even when its
+preferred Host is unavailable.
+
+### System Principle
+
+> **Systems belong to users. Systems contain devices.**
+
+A device's membership is associated with its System.
+
+A device from another user's System does not become a member of the
+local System merely because the two Systems trust or communicate with
+each other.
 
 ------------------------------------------------------------------------
 
-## 4. Device Roles
+## 4. Constellations
 
-A device's role describes its general function within a Constellation.
+A Constellation is the larger Aether structure that connects one or more
+Systems.
+
+A Constellation may initially contain only one System.
+
+For example:
+
+``` text
+Aether Constellation
+└── Alex's System
+```
+
+It may later contain multiple independently controlled Systems:
+
+``` text
+Aether Constellation
+├── Alex's System
+├── Friend's System
+└── Family Member's System
+```
+
+Each System retains its own identity, devices, personal AI, Host
+configuration, authority boundaries, and permissions.
+
+Connecting Systems through a Constellation does not merge them.
+
+### Constellation Principle
+
+> **Constellations connect Systems; they do not erase System
+> boundaries.**
+
+Cross-System trust and communication will require explicit security and
+permission rules.
+
+The exact cross-System trust model is deferred to future architectural
+work.
+
+------------------------------------------------------------------------
+
+## 5. System and Constellation Identity
+
+Systems and Constellations must be conceptually independent of the
+devices participating in them.
+
+A System should eventually have a stable identity that is not derived
+solely from:
+
+-   Its user's display name
+-   Its personal AI's name
+-   Its Primary Host
+-   Its Active Host
+-   A particular network address
+-   A particular device
+
+Likewise, a Constellation should not depend on one specific System or
+device for its conceptual identity.
+
+The exact identifier formats and cryptographic representations are
+deferred.
+
+------------------------------------------------------------------------
+
+## 6. Device Roles
+
+A device's role describes its general function within a System.
 
 Roles are not identities and do not inherently grant authority.
 
-Device Model v0.1 defines three initial roles.
+Device Model v0.2 defines three initial roles.
 
 ### Node
 
 A Node is a general-purpose computing device capable of participating
-broadly in the Constellation.
+broadly in its System.
 
 Nodes may:
 
@@ -142,7 +231,7 @@ additional capabilities in future versions of Aether.
 ### Companion
 
 A Companion is a constrained device that primarily extends the
-experience of another device or the wider Constellation.
+experience of another device or the wider System.
 
 Wearable devices are a likely example.
 
@@ -151,7 +240,7 @@ Aether's mobile and wearable architecture develops.
 
 ------------------------------------------------------------------------
 
-## 5. Roles Do Not Equal Authority
+## 7. Roles Do Not Equal Authority
 
 A device role describes what kind of participant a device is.
 
@@ -163,13 +252,14 @@ For example:
 -   A Host does not automatically gain unrestricted access to every
     device.
 -   An Endpoint does not automatically trust every Node.
--   Constellation membership does not imply universal permission.
+-   System membership does not imply universal permission.
+-   Constellation membership does not imply cross-System permission.
 
 Authority and permissions must be evaluated separately.
 
 ------------------------------------------------------------------------
 
-## 6. Capabilities
+## 8. Capabilities
 
 Capabilities describe what an Aether Device can actually provide.
 
@@ -193,7 +283,7 @@ involving:
 -   Device-specific services
 
 The final capability namespace and permission model are not defined by
-Device Model v0.1.
+Device Model v0.2.
 
 ### Capability Principle
 
@@ -210,12 +300,13 @@ This allows Aether to remain platform-independent and extensible.
 
 ------------------------------------------------------------------------
 
-## 7. Device Relationship States
+## 9. Device Relationship States
 
 Aether distinguishes between the existence of an installation and the
 trust granted to that installation.
 
-Conceptually, devices may progress through states such as:
+Conceptually, devices within a System may progress through states such
+as:
 
 ``` text
 Installed
@@ -231,13 +322,13 @@ Trusted
 
 Aether exists on the device.
 
-Installation alone grants no relationship with another device.
+Installation alone grants no relationship with another device or System.
 
 ### Discovered
 
 Another Aether Device has learned that the device exists.
 
-Discovery does not imply authentication or trust.
+Discovery does not imply authentication, System membership, or trust.
 
 ### Paired
 
@@ -251,11 +342,11 @@ Pairing alone must not mean unrestricted access.
 A trusted relationship has been explicitly established.
 
 Trust may still be limited by permissions, capabilities, user authority,
-or other security policy.
+System boundaries, or other security policy.
 
 ------------------------------------------------------------------------
 
-## 8. Network Reachability Is Not Trust
+## 10. Network Reachability Is Not Trust
 
 Aether maintains the foundational principle established by the Aether
 Charter:
@@ -266,15 +357,18 @@ Charter:
 Two devices being able to communicate over a LAN, VPN, relay, Internet
 connection, or another transport mechanism does not establish trust.
 
+The same principle applies across Systems.
+
 Network transport and Aether trust are separate layers.
 
 ------------------------------------------------------------------------
 
-## 9. Host Eligibility
+## 11. Host Eligibility
 
 Host is not a permanent device type.
 
-Instead, Host status is a function that an eligible Node may perform.
+Instead, Host status is a function that an eligible Node may perform
+within its System.
 
 A Node may declare or be configured with Host eligibility.
 
@@ -301,18 +395,22 @@ iPhone
 Host eligibility does not mean that the device is currently acting as
 Host.
 
+Host eligibility is scoped to the device's own System unless a future
+cross-System architecture explicitly defines otherwise.
+
 ------------------------------------------------------------------------
 
-## 10. Primary Host
+## 12. Primary Host
 
-The Primary Host is the preferred Host of a Constellation.
+The Primary Host is the preferred Host of a System.
 
 It represents the device that should normally provide the central
-services used by a personal AI or other Aether applications.
+services used by that System's personal AI or other Aether applications.
 
 For example:
 
 ``` text
+system: Alex's System
 primary_host: NOVA
 ```
 
@@ -320,12 +418,14 @@ The Primary Host designation describes the preferred topology.
 
 It does not guarantee that the device is currently online or available.
 
+A System can continue to exist when its Primary Host is unavailable.
+
 ------------------------------------------------------------------------
 
-## 11. Active Host
+## 13. Active Host
 
 The Active Host is the Host currently providing the relevant central
-services for the Constellation.
+services for a System.
 
 Normally:
 
@@ -345,11 +445,11 @@ Active Host:  ORION
 Changing the Active Host does not necessarily change the Primary Host.
 
 This distinction allows temporary Host migration without rewriting the
-user's preferred topology.
+user's preferred System topology.
 
 ------------------------------------------------------------------------
 
-## 12. User-Directed Host Switching
+## 14. User-Directed Host Switching
 
 Host selection must support explicit user-directed switching.
 
@@ -360,6 +460,7 @@ A user should eventually be able to request an operation equivalent to:
 Before completing a Host switch, Aether must be able to determine
 whether the requested device is:
 
+-   A member of the appropriate System
 -   Available
 -   Authenticated
 -   Trusted
@@ -370,13 +471,14 @@ A Host switch must not silently grant new device permissions.
 
 A personal AI may provide a natural-language interface for requesting
 Host changes, but Aether remains responsible for enforcing the
-underlying device and trust requirements.
+underlying device, System, and trust requirements.
 
 ------------------------------------------------------------------------
 
-## 13. Host Selection Modes
+## 15. Host Selection Modes
 
-Aether should be designed to support multiple Host selection policies.
+Aether should be designed to support multiple Host selection policies
+within a System.
 
 ### Manual
 
@@ -385,8 +487,9 @@ another properly authorized operation.
 
 ### Assisted
 
-When the Active Host becomes unavailable, Aether or a personal AI may
-identify eligible alternatives and ask the user whether to switch.
+When the Active Host becomes unavailable, Aether or the System's
+personal AI may identify eligible alternatives and ask the user whether
+to switch.
 
 Assisted behavior is the preferred eventual default because it provides
 resilience while preserving user control.
@@ -399,15 +502,15 @@ user-approved failover policy.
 Automatic failover must be explicitly configurable and must not imply
 unrestricted authority.
 
-Device Model v0.1 defines these modes conceptually but does not
+Device Model v0.2 defines these modes conceptually but does not
 implement their selection algorithms.
 
 ------------------------------------------------------------------------
 
-## 14. Host Preference
+## 16. Host Preference
 
 Host-eligible devices may eventually have preference or priority
-information.
+information within their System.
 
 Conceptually:
 
@@ -434,13 +537,13 @@ The exact ranking and failover algorithm will be defined separately.
 
 ------------------------------------------------------------------------
 
-## 15. Graceful Degradation
+## 17. Graceful Degradation
 
 A personal AI using Aether must not conceptually depend on one physical
 Host for its identity.
 
-If the preferred Host becomes unavailable, another eligible device may
-provide a reduced set of services.
+If the preferred Host becomes unavailable, another eligible device
+within the System may provide a reduced set of services.
 
 For example, a fallback Host may lack:
 
@@ -459,50 +562,51 @@ This produces the following principle:
 
 ------------------------------------------------------------------------
 
-## 16. Personal AI Identity and Host Mobility
+## 18. Personal AI Identity and Host Mobility
 
 A personal AI is not identical to its Host device.
 
 For an AI implementation using Aether:
 
-> **The AI belongs to the Constellation, not to the Host.**
+> **The personal AI belongs to its System, not to any individual Host.**
 
 Changing the Active Host must not inherently change:
 
 -   The AI's identity
 -   The AI's name
 -   The user's relationship with the AI
--   The logical identity of the Constellation
+-   The logical identity of the System
 
 Host migration changes where services are currently being provided.
 
-It does not create a new AI.
+It does not create a new AI or a new System.
 
 ------------------------------------------------------------------------
 
-## 17. State and Replication
+## 19. State and Replication
 
 Host mobility creates a future requirement for determining which state
-must be available across Host-eligible devices.
+must be available across Host-eligible devices within a System.
 
 Aether will eventually need explicit rules for distinguishing between:
 
 -   Device-local state
+-   System state
 -   Constellation state
 -   Replicated state
 -   Sensitive state that must not be replicated
 -   Cached state
 -   Authoritative state
 
-Device Model v0.1 does not define a replication architecture.
+Device Model v0.2 does not define a replication architecture.
 
 Replication must be designed separately with explicit consideration for
-security, consistency, privacy, conflict resolution, and failure
-recovery.
+security, consistency, privacy, conflict resolution, System boundaries,
+and failure recovery.
 
 ------------------------------------------------------------------------
 
-## 18. Personal AI Authority
+## 20. Personal AI Authority
 
 Aether device trust and personal AI authority remain separate security
 layers.
@@ -513,21 +617,57 @@ permission from its user to request an action.
 Aether independently determines whether:
 
 -   The requesting device is authenticated
+-   The requesting device belongs to the appropriate System
 -   The requesting device is trusted
 -   The requested capability exists
 -   The relationship permits use of that capability
 -   The target device accepts the request
+-   Any applicable cross-System boundary permits the request
 
 Approval at one layer does not automatically grant approval at another.
 
 ------------------------------------------------------------------------
 
-## 19. Example Constellation
+## 21. Cross-System Relationships
 
-An example Constellation may eventually appear conceptually as:
+Devices remain members of their own Systems when Systems are connected
+through a Constellation.
+
+For example:
 
 ``` text
-Constellation
+Aether Constellation
+│
+├── Alex's System
+│   ├── Selene
+│   ├── NOVA
+│   └── ORION
+│
+└── Friend's System
+    ├── Personal AI
+    └── Friend's PC
+```
+
+The Friend's PC does not become a Node in Alex's System.
+
+Likewise, NOVA does not become a Node in the Friend's System.
+
+Any communication or capability use across the System boundary must be
+governed by an explicit cross-System trust and permission model.
+
+That model is not defined by Device Model v0.2.
+
+------------------------------------------------------------------------
+
+## 22. Example System
+
+An example System may eventually appear conceptually as:
+
+``` text
+Alex's System
+
+Selene
+  personal_ai: true
 
 NOVA
   role: Node
@@ -558,6 +698,12 @@ iPhone
   platform: iOS
   host_eligible: false
   status: online
+
+Apple Watch
+  role: Companion
+  platform: watchOS
+  host_eligible: false
+  status: online
 ```
 
 This example describes topology and current state.
@@ -566,35 +712,76 @@ It does not imply unrestricted permissions between any of these devices.
 
 ------------------------------------------------------------------------
 
-## 20. Design Principles
+## 23. Example Constellation
+
+The same System may participate in a larger Constellation:
+
+``` text
+Aether Constellation
+│
+├── Alex's System
+│   ├── Selene
+│   ├── NOVA
+│   ├── ENVY
+│   ├── ORION
+│   ├── iPhone
+│   └── Apple Watch
+│
+├── Friend's System
+│   ├── Personal AI
+│   └── Devices
+│
+└── Family Member's System
+    ├── Personal AI
+    └── Devices
+```
+
+Each System remains independently controlled.
+
+Constellation membership does not merge ownership, authority, Host
+selection, or device membership.
+
+------------------------------------------------------------------------
+
+## 24. Design Principles
 
 The Aether Device Model follows these principles:
 
 1.  Every device has an independent identity.
 2.  Human-readable device names are not authoritative identities.
-3.  Roles describe function, not authority.
-4.  Capabilities describe what devices can actually provide.
-5.  Network reachability does not imply trust.
-6.  Pairing does not imply unrestricted access.
-7.  Trust does not imply unrestricted permission.
-8.  Host is a function, not a permanent device type.
-9.  Primary Host and Active Host are separate concepts.
-10. Users must be able to explicitly direct Host switching.
-11. Failover policy must remain under user control.
-12. Host migration must not change personal AI identity.
-13. Loss of a Host should reduce capability, not destroy identity.
-14. Aether must remain independent of any particular AI, operating
-    system, model provider, or device arrangement.
+3.  Every device belongs to a System.
+4.  A System represents one user's independent Aether environment.
+5.  A System may contain one device or many devices.
+6.  A Constellation connects one or more Systems.
+7.  Connecting Systems does not merge their ownership or authority
+    boundaries.
+8.  Roles describe function, not authority.
+9.  Capabilities describe what devices can actually provide.
+10. Network reachability does not imply trust.
+11. Pairing does not imply unrestricted access.
+12. Trust does not imply unrestricted permission.
+13. Host is a function, not a permanent device type.
+14. Primary Host and Active Host are separate concepts within a System.
+15. Users must be able to explicitly direct Host switching.
+16. Failover policy must remain under user control.
+17. Host migration must not change personal AI identity.
+18. Loss of a Host should reduce capability, not destroy identity.
+19. A personal AI belongs to its System, not to an individual Host.
+20. Aether must remain independent of any particular AI, operating
+    system, model provider, user, or device arrangement.
 
 ------------------------------------------------------------------------
 
-## 21. Deferred Design Work
+## 25. Deferred Design Work
 
-Device Model v0.1 intentionally does not define:
+Device Model v0.2 intentionally does not define:
 
 -   Device identifier format
+-   System identifier format
+-   Constellation identifier format
 -   Cryptographic algorithms
 -   Pairing protocol
+-   Device enrollment protocol
 -   Discovery protocol
 -   Network transport
 -   Capability namespace
@@ -605,8 +792,10 @@ Device Model v0.1 intentionally does not define:
 -   State replication
 -   Conflict resolution
 -   Recovery after network partition
--   Multi-Constellation membership
--   Cross-Constellation trust
+-   Multi-System device membership
+-   Cross-System trust
+-   Cross-System capability exchange
+-   Constellation creation and administration
 -   Revocation protocol
 
 These areas require separate architectural decisions and should not be
@@ -616,18 +805,25 @@ implied by this document.
 
 ## Summary
 
-Aether treats a Constellation as a collection of independently
-identified, explicitly trusted devices that expose capabilities under
+Aether treats a System as one user's independent environment containing
+independently identified devices that expose capabilities under
 controlled permissions.
 
 Devices may assume different roles without changing identity.
 
 Eligible Nodes may provide Host services, and the Active Host may move
-between devices without changing the identity of the personal AI using
-Aether.
+between devices within a System without changing the identity of the
+personal AI using Aether.
 
-The Primary Host represents where the AI normally lives.
+Systems may connect to other Systems through a Constellation without
+surrendering their independent ownership, identity, or authority
+boundaries.
+
+The Primary Host represents where the personal AI normally lives.
 
 The Active Host represents where it is running now.
 
-The Constellation represents where it belongs.
+The System represents where it belongs.
+
+The Constellation represents the larger whole to which Systems may
+connect.
