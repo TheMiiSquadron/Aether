@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Aether Foundation runtime scaffold"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["cryptography>=41"]
 
 [project.scripts]
 aether = "aether.__main__:main"

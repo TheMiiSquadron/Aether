@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True, slots=True)
@@ -11,3 +12,4 @@ class RuntimeConfig:
 
     aether_version: str = "0.1.0"
     log_level: str = "WARNING"
+    identity_dir: Path | None = None

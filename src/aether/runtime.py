@@ -8,7 +8,9 @@ from datetime import datetime, timezone
 from enum import StrEnum
 
 from aether.config import RuntimeConfig
-from aether.device import AetherDevice, DeviceIdentity, DeviceRole
+from aether.device import AetherDevice, DeviceRole
+from aether.identity_store import FileIdentityStore, IdentityStore
+from aether.paths import default_identity_dir
 from aether.platform_info import PlatformInfoProvider, StandardPlatformInfoProvider
 
 LOGGER = logging.getLogger(__name__)
@@ -25,6 +27,7 @@ class AetherRuntime:
 
     config: RuntimeConfig
     platform_provider: PlatformInfoProvider | None = None
+    identity_store: IdentityStore | None = None
     state: RuntimeState = field(init=False)
     local_device: AetherDevice | None = field(init=False)
     started_at: datetime | None = field(init=False)
@@ -32,6 +35,9 @@ class AetherRuntime:
     def __post_init__(self) -> None:
         if self.platform_provider is None:
             self.platform_provider = StandardPlatformInfoProvider()
+        if self.identity_store is None:
+            identity_dir = self.config.identity_dir or default_identity_dir()
+            self.identity_store = FileIdentityStore(identity_dir)
         self.state = RuntimeState.STOPPED
         self.local_device: AetherDevice | None = None
         self.started_at: datetime | None = None
@@ -41,8 +47,9 @@ class AetherRuntime:
             return self.startup_report()
 
         platform_info = self.platform_provider.get_platform_info()
+        local_identity = self.identity_store.load_or_create()
         self.local_device = AetherDevice(
-            identity=DeviceIdentity.ephemeral(),
+            identity=local_identity.public_identity,
             display_name=platform_info.display_name,
             platform=platform_info.platform,
             platform_version=platform_info.platform_version,
